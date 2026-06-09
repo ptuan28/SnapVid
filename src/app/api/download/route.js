@@ -47,17 +47,29 @@ export async function POST(request) {
           const data = result.data;
           const downloads = [];
 
+          // Helper để chuẩn hoá liên kết, tránh tự ghép "https://www.tikwm.com" nếu link đã là tuyệt đối
+          const formatTikWMUrl = (path) => {
+            if (!path) return '';
+            if (path.startsWith('http://') || path.startsWith('https://')) {
+              return path;
+            }
+            if (path.startsWith('//')) {
+              return `https:${path}`;
+            }
+            return `https://www.tikwm.com${path}`;
+          };
+
           if (data.hdplay) {
-            downloads.push({ label: 'Video HD (Không Logo)', url: `https://www.tikwm.com${data.hdplay}`, quality: 'HD' });
+            downloads.push({ label: 'Video HD (Không Logo)', url: formatTikWMUrl(data.hdplay), quality: 'HD' });
           }
           if (data.play) {
-            downloads.push({ label: 'Video SD (Không Logo)', url: `https://www.tikwm.com${data.play}`, quality: 'SD' });
+            downloads.push({ label: 'Video SD (Không Logo)', url: formatTikWMUrl(data.play), quality: 'SD' });
           }
           if (data.wmplay) {
-            downloads.push({ label: 'Video (Có Logo)', url: `https://www.tikwm.com${data.wmplay}`, quality: 'Watermark' });
+            downloads.push({ label: 'Video (Có Logo)', url: formatTikWMUrl(data.wmplay), quality: 'Watermark' });
           }
           if (data.music) {
-            downloads.push({ label: 'Nhạc Nền MP3 (Audio)', url: `https://www.tikwm.com${data.music}`, quality: 'Audio' });
+            downloads.push({ label: 'Nhạc Nền MP3 (Audio)', url: formatTikWMUrl(data.music), quality: 'Audio' });
           }
 
           return NextResponse.json({
@@ -65,8 +77,8 @@ export async function POST(request) {
             platform: 'tiktok',
             title: data.title || 'Video TikTok',
             author: data.author?.nickname || 'TikTok User',
-            avatar: data.author?.avatar ? `https://www.tikwm.com${data.author.avatar}` : null,
-            cover: data.cover ? `https://www.tikwm.com${data.cover}` : null,
+            avatar: data.author?.avatar ? formatTikWMUrl(data.author.avatar) : null,
+            cover: data.cover ? formatTikWMUrl(data.cover) : null,
             duration: data.duration || 0,
             downloads: downloads
           });
