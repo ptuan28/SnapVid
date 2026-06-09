@@ -2,10 +2,9 @@ import { NextResponse } from 'next/server';
 
 // Danh sách các máy chủ Cobalt API công cộng được sử dụng làm phương án dự phòng (fallback)
 const DEFAULT_COBALT_INSTANCES = [
-  'https://cobalt.api.ryz.cx',
-  'https://cobalt-api.lule.io',
-  'https://api.wuk.sh',
-  'https://api.cobalt.tools' // Thường bị giới hạn rate-limit nhưng giữ lại cuối cùng
+  'https://lime.clxxped.lol',
+  'https://apicobalt.mgytr.top',
+  'https://api.qwkuns.me'
 ];
 
 export async function POST(request) {
