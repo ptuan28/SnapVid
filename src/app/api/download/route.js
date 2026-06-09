@@ -74,18 +74,10 @@ export async function POST(request) {
             return `/api/proxy?url=${encodeURIComponent(directUrl)}&filename=${encodeURIComponent(filename)}`;
           };
 
-          if (data.hdplay) {
-            const fileUrl = formatTikWMUrl(data.hdplay);
-            downloads.push({ 
-              label: 'Video HD (Không Logo)', 
-              url: getProxyUrl(fileUrl, cleanFilename(data.title || 'tiktok-video', 'mp4')), 
-              quality: 'HD' 
-            });
-          }
           if (data.play) {
             const fileUrl = formatTikWMUrl(data.play);
             downloads.push({ 
-              label: 'Video SD (Không Logo)', 
+              label: 'Video (Không Logo)', 
               url: getProxyUrl(fileUrl, cleanFilename(data.title || 'tiktok-video', 'mp4')), 
               quality: 'SD' 
             });
