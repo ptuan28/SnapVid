@@ -1,26 +1,83 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #FFFBF0;
+  --foreground: #4A3B32;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-quicksand), sans-serif;
+  --font-heading: var(--font-fredoka), sans-serif;
+  
+  --color-brand-pink: #FF8E9E;
+  --color-brand-cream: #FFFBF0;
+  --color-brand-cream-dark: #FDF3DB;
+  --color-brand-brown: #4A3B32;
+  --color-brand-mint: #A3E9C9;
+  --color-brand-sky: #A7E3FF;
+  --color-brand-yellow: #FFE885;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+/* Cute micro-interactions */
+.bouncy-hover {
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.bouncy-hover:hover {
+  transform: translateY(-4px) scale(1.02);
+}
+
+.bouncy-hover:active {
+  transform: translateY(0px) scale(0.98);
+}
+
+/* Bubbly Cartoon 3D Shadows */
+.bubble-shadow-brown {
+  box-shadow: 4px 4px 0px 0px #4A3B32;
+  border: 3px solid #4A3B32;
+}
+
+.bubble-shadow-pink {
+  box-shadow: 4px 4px 0px 0px #FF8E9E;
+  border: 3px solid #4A3B32;
+}
+
+.bubble-shadow-yellow {
+  box-shadow: 4px 4px 0px 0px #FFE885;
+  border: 3px solid #4A3B32;
+}
+
+.bubble-shadow-mint {
+  box-shadow: 4px 4px 0px 0px #A3E9C9;
+  border: 3px solid #4A3B32;
+}
+
+.bubble-shadow-sky {
+  box-shadow: 4px 4px 0px 0px #A7E3FF;
+  border: 3px solid #4A3B32;
+}
+
+/* Keyframes for cute bouncing float */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+.cute-float {
+  animation: float 3s ease-in-out infinite;
+}
+
