@@ -63,7 +63,7 @@ export async function POST(request) {
           const cleanFilename = (str, ext = 'mp4') => {
             if (!str) return `video.${ext}`;
             // Loại bỏ emoji và ký tự đặc biệt, chỉ giữ lại chữ, số, dấu cách, gạch ngang, gạch dưới
-            let clean = str.replace(/[^\p{L}\p{N}\s-_]/gu, '').trim();
+            let clean = str.replace(/[^\p{L}\p{N}\s\-_]/gu, '').trim();
             clean = clean.replace(/\s+/g, ' '); // Rút gọn khoảng trắng liên tiếp
             clean = clean.substring(0, 50).trim() || 'video';
             return `${clean}.${ext}`;
@@ -167,7 +167,7 @@ export async function POST(request) {
           // Helper dọn dẹp tên file
           const cleanFilename = (str, ext = 'mp4') => {
             if (!str) return `video.${ext}`;
-            let clean = str.replace(/[^\p{L}\p{N}\s-_]/gu, '').trim();
+            let clean = str.replace(/[^\p{L}\p{N}\s\-_]/gu, '').trim();
             clean = clean.replace(/\s+/g, ' ');
             clean = clean.substring(0, 50).trim() || 'video';
             return `${clean}.${ext}`;
