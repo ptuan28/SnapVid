@@ -1,36 +1,128 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<div align="center">
 
-## Getting Started
+# 🌸 SnapVid
 
-First, run the development server:
+**Tải video đa nền tảng — không logo, không giới hạn, dễ thương vô cùng**
+
+
+[🚀 Demo Live](#) · [📖 Hướng dẫn nhúng](#embed-mode) · [🐛 Báo lỗi](https://github.com/ptuan28/SnapVid/issues)
+
+</div>
+
+---
+
+## ✨ Tính năng
+
+- 🎵 **TikTok & Douyin** — Tải video HD/SD không logo qua TikWM API, kèm nhạc nền MP3
+- 📺 **YouTube** — Chọn chất lượng 360p / 480p / 720p / 1080p, tải qua mạng Cobalt
+- 📸 **Instagram Reels & Slide** — Hỗ trợ tải từng ảnh/video trong bộ sưu tập
+- 🔁 **Fallback tự động** — Thử lần lượt nhiều Cobalt instance nếu một máy chủ bị lỗi
+- 🎛️ **Cài đặt linh hoạt** — Đặt chất lượng mặc định, tự cấu hình Cobalt API endpoint riêng
+- 🖼️ **Chế độ nhúng (Embed Mode)** — Nhúng form tải vào website khác bằng `?embed=true`
+- 🎉 **Confetti ăn mừng** — Pháo hoa giấy khi tải thành công (vì sao không? 🌸)
+- 💾 **Lưu cài đặt** — Tự nhớ quality và endpoint yêu thích qua localStorage
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Công nghệ |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| UI | React 19 + Tailwind CSS v4 |
+| Animation | Framer Motion + canvas-confetti |
+| Icons | Lucide React |
+| Backend | Next.js API Route (`/api/download`) |
+| Video Sources | TikWM API (TikTok/Douyin), Cobalt (YouTube/Instagram) |
+
+---
+
+## 🚀 Chạy local
 
 ```bash
+# Clone repo
+git clone https://github.com/ptuan28/SnapVid.git
+cd SnapVid
+
+# Cài dependencies
+npm install
+
+# Chạy dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Mở [http://localhost:3000](http://localhost:3000) trên trình duyệt.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📁 Cấu trúc project
 
-## Learn More
+```
+SnapVid/
+├── src/
+│   ├── app/
+│   │   ├── page.js              # Trang chính
+│   │   ├── layout.js            # Layout gốc
+│   │   ├── globals.css          # CSS global + custom animations
+│   │   └── api/download/
+│   │       └── route.js         # API endpoint xử lý tải video
+│   └── components/
+│       ├── DownloaderForm.jsx   # Form nhập link, chọn chất lượng
+│       ├── VideoPreview.jsx     # Hiển thị kết quả + nút tải
+│       ├── SettingsModal.jsx    # Modal cài đặt quality & API endpoint
+│       ├── LegalFooter.jsx      # Footer + modal điều khoản pháp lý
+│       ├── IntegrationGuide.jsx # Hướng dẫn nhúng iframe
+│       └── MonetizationGuide.jsx# Gợi ý kiếm tiền
+├── public/
+├── AGENTS.md                    # Hướng dẫn cho AI agents
+└── package.json
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🖼️ Embed Mode
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Nhúng SnapVid vào website của bạn bằng iframe:
 
-## Deploy on Vercel
+```html
+<iframe
+  src="https://your-snapvid-domain.com/?embed=true"
+  width="100%"
+  height="400"
+  frameborder="0"
+  style="border-radius: 16px;"
+></iframe>
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Chế độ embed ẩn header, footer, hướng dẫn — chỉ giữ lại form tải và kết quả.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## ⚙️ Cách hoạt động
+
+```
+Người dùng dán link
+        ↓
+/api/download (POST)
+        ↓
+   TikTok/Douyin? ──► TikWM API → trả về HD/SD/MP3
+        ↓ (nếu không phải TikTok, hoặc TikWM lỗi)
+   YouTube/Instagram? ──► Cobalt instance #1
+                               ↓ lỗi?
+                          Cobalt instance #2
+                               ↓ lỗi?
+                          ... (4 instances)
+        ↓
+   Trả về danh sách link tải → VideoPreview hiển thị
+```
+
+
+## ⚠️ Lưu ý pháp lý
+
+SnapVid là công cụ kỹ thuật phục vụ mục đích cá nhân và giáo dục. Người dùng chịu trách nhiệm đảm bảo việc tải nội dung tuân thủ điều khoản sử dụng của nền tảng gốc và luật bản quyền áp dụng. Không sử dụng công cụ này để vi phạm bản quyền hoặc phân phối nội dung trái phép.
+
+---
+
+## 📄 License
+
+MIT © [ptuan28](https://github.com/ptuan28)
