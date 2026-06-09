@@ -59,17 +59,46 @@ export async function POST(request) {
             return `https://www.tikwm.com${path}`;
           };
 
+          // Helper để dọn dẹp tên file tải xuống cho đẹp
+          const cleanFilename = (str, ext = 'mp4') => {
+            if (!str) return `video.${ext}`;
+            // Loại bỏ emoji và ký tự đặc biệt, chỉ giữ lại chữ, số, dấu cách, gạch ngang, gạch dưới
+            let clean = str.replace(/[^\p{L}\p{N}\s-_]/gu, '').trim();
+            clean = clean.replace(/\s+/g, ' '); // Rút gọn khoảng trắng liên tiếp
+            clean = clean.substring(0, 50).trim() || 'video';
+            return `${clean}.${ext}`;
+          };
+
+          // Helper để tạo link tải trực tiếp thông qua Proxy
+          const getProxyUrl = (directUrl, filename) => {
+            return `/api/proxy?url=${encodeURIComponent(directUrl)}&filename=${encodeURIComponent(filename)}`;
+          };
+
           if (data.hdplay) {
-            downloads.push({ label: 'Video HD (Không Logo)', url: formatTikWMUrl(data.hdplay), quality: 'HD' });
+            const fileUrl = formatTikWMUrl(data.hdplay);
+            downloads.push({ 
+              label: 'Video HD (Không Logo)', 
+              url: getProxyUrl(fileUrl, cleanFilename(data.title || 'tiktok-video', 'mp4')), 
+              quality: 'HD' 
+            });
           }
           if (data.play) {
-            downloads.push({ label: 'Video SD (Không Logo)', url: formatTikWMUrl(data.play), quality: 'SD' });
+            const fileUrl = formatTikWMUrl(data.play);
+            downloads.push({ 
+              label: 'Video SD (Không Logo)', 
+              url: getProxyUrl(fileUrl, cleanFilename(data.title || 'tiktok-video', 'mp4')), 
+              quality: 'SD' 
+            });
           }
-          if (data.wmplay) {
-            downloads.push({ label: 'Video (Có Logo)', url: formatTikWMUrl(data.wmplay), quality: 'Watermark' });
-          }
+          // Bỏ tuỳ chọn wmplay (Video Có Logo) theo yêu cầu của bạn
+
           if (data.music) {
-            downloads.push({ label: 'Nhạc Nền MP3 (Audio)', url: formatTikWMUrl(data.music), quality: 'Audio' });
+            const fileUrl = formatTikWMUrl(data.music);
+            downloads.push({ 
+              label: 'Nhạc Nền MP3 (Audio)', 
+              url: getProxyUrl(fileUrl, cleanFilename(data.title || 'tiktok-audio', 'mp3')), 
+              quality: 'Audio' 
+            });
           }
 
           return NextResponse.json({
@@ -135,28 +164,36 @@ export async function POST(request) {
         if (data.url || data.status === 'picker') {
           const downloads = [];
 
+          // Helper dọn dẹp tên file
+          const cleanFilename = (str, ext = 'mp4') => {
+            if (!str) return `video.${ext}`;
+            let clean = str.replace(/[^\p{L}\p{N}\s-_]/gu, '').trim();
+            clean = clean.replace(/\s+/g, ' ');
+            clean = clean.substring(0, 50).trim() || 'video';
+            return `${clean}.${ext}`;
+          };
+
           if (data.status === 'picker' && Array.isArray(data.picker)) {
             // Trường hợp tải nhiều ảnh/video (ví dụ: Instagram Slide)
             data.picker.forEach((item, index) => {
+              const ext = item.type === 'photo' ? 'jpg' : 'mp4';
+              const fileUrl = item.url;
+              const name = `item_${index + 1}.${ext}`;
               downloads.push({
                 label: `Mục ${index + 1} (${item.type === 'photo' ? 'Ảnh' : 'Video'})`,
-                url: item.url,
+                url: `/api/proxy?url=${encodeURIComponent(fileUrl)}&filename=${encodeURIComponent(name)}`,
                 quality: 'Default'
               });
             });
           } else if (data.url) {
             // Tải đơn lẻ
+            const fileUrl = data.url;
+            const rawFilename = data.filename || 'media.mp4';
             downloads.push({
               label: platform === 'youtube' ? `Tải Video (${quality}p)` : 'Tải Video / Media',
-              url: data.url,
+              url: `/api/proxy?url=${encodeURIComponent(fileUrl)}&filename=${encodeURIComponent(rawFilename)}`,
               quality: quality
             });
-            
-            // Nếu là YouTube, thêm tuỳ chọn tải Audio MP3
-            if (platform === 'youtube') {
-              // Gửi thêm một request phụ ngầm để lấy link MP3 nếu có thể, 
-              // nhưng để tối ưu thời gian phản hồi, ta sẽ trả về link video trước.
-            }
           }
 
           return NextResponse.json({
