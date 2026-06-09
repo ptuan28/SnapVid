@@ -126,14 +126,11 @@ export async function POST(request) {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
           },
           body: JSON.stringify({
             url: url,
-            videoQuality: quality,
-            audioFormat: 'mp3',
-            filenamePattern: 'basic',
-            downloadMode: 'auto',
-            youtubeVideoCodec: 'h264' // Hỗ trợ codec h264 tốt hơn cho các trình duyệt di động
+            videoQuality: quality
           }),
           signal: AbortSignal.timeout(10000) // Timeout 10 giây mỗi instance để tránh treo
         });
