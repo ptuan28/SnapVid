@@ -77,7 +77,7 @@ export async function POST(request) {
           if (data.play) {
             const fileUrl = formatTikWMUrl(data.play);
             downloads.push({ 
-              label: 'Video (Không Logo)', 
+              label: 'Video HD (Không Logo)', 
               url: getProxyUrl(fileUrl, cleanFilename(data.title || 'tiktok-video', 'mp4')), 
               quality: 'SD' 
             });
